@@ -21,14 +21,13 @@ const Gameboard = (() => {
 
 function Player(name, marker) {
     let score = 0;
-    // const randomMarker = () => {
-    //     if (Math.round(Math.random()) && getCurrentPlayer()) return marker = "O";
-    //     else return marker = "X";
-    // }
-    // marker = randomMarker();
+    if (!marker) {
+        marker = Math.round(Math.random()) ? "O" : "X";
+    }
+
     const updateScore = () => score++;
     const getScore = () => score;
-  
+
     const getMarker = () => marker;
     const getName = () => name;
 
@@ -37,20 +36,23 @@ function Player(name, marker) {
 
 const Game = () => {
     let currentPlayer;
-    const player1 = Player("player one", "O");
-    const player2 = Player("player two", "X");
-    const players = [
-        {
-            name: player1.getName(),
-            marker: player1.getMarker()
-        },
-        {
-            name: player2.getName(),
-            marker: player2.getMarker()
-        }
-    ];
+    let marker2;
+    const player1 = Player("player one");
+    marker2 = player1.getMarker() === "O" ? "X" : "O";
+    const player2 = Player("player two", marker2);
+    const players =
+        [
+            {
+                name: player1.getName(),
+                marker: player1.getMarker()
+            },
+            {
+                name: player2.getName(),
+                marker: player2.getMarker()
+            }
+        ];
 
-    if (players[0].marker === "O") {
+    if (players[0].marker === "X") {
         currentPlayer = players[0];
         console.log(`${players[0].name}'s turn`);
     }
@@ -73,7 +75,7 @@ const Game = () => {
         switchPlayerTurn();
     }
 
-    return { switchPlayerTurn, getCurrentPlayer, placeMarker };
+    return { getCurrentPlayer, placeMarker };
 };
 
 const game = Game();
