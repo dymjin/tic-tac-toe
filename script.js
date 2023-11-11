@@ -1,15 +1,17 @@
 const Gameboard = (() => {
     let gameboardArr = [
-        "b", "b", "b",
-        "b", "b", "b",
-        "b", "b", "b"
+        ["b", "b", "b"],
+        ["b", "b", "b"],
+        ["b", "b", "b"]
     ];
 
     const display = () => {
         let msg = "";
         for (let i = 0; i < gameboardArr.length; i++) {
-            if (i % 3 === 0) msg += `\n`;
-            msg += `${gameboardArr[i]} `;
+            for (let j = 0; j < gameboardArr[i].length; j++) {
+                if (j % 3 === 0) msg += `\n`;
+                msg += `${gameboardArr[i][j]} `;
+            }
         }
         console.log(msg);
     }
@@ -68,11 +70,28 @@ const Game = () => {
         console.log(`${getCurrentPlayer().name}'s turn`);
     }
 
-    const placeMarker = (index) => {
+    const checkBoard = (board) => {
+        if (board.find("O")) {
+
+        }
+    }
+
+    const placeMarker = (x, y) => {
         const board = Gameboard.getBoard();
-        board.splice(index - 1, 1, getCurrentPlayer().marker);
-        Gameboard.display();
-        switchPlayerTurn();
+        if (x > board.length || y > board.length) {
+            console.log('invalid move!');
+        }
+        else {
+            if (board[x - 1][y - 1] !== "b") {
+                console.log('marker already present!');
+            } else {
+                board[x - 1].splice(y - 1, 1, getCurrentPlayer().marker);
+                console.log(board);
+                Gameboard.display();
+                switchPlayerTurn();
+            }
+
+        }
     }
 
     return { getCurrentPlayer, placeMarker };
