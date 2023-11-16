@@ -1,0 +1,41 @@
+*,
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    --grid-line-width: 4px;
+    margin-top: 100px;
+    display: grid;
+    width: calc(600px+var(--grid-line-width));
+    gap: var(--grid-line-width);
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(3, 200px);
+    background-color: black;
+}
+
+.container>div {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    user-select: none;
+}
+
+.container>div.material-symbols-outlined {
+    font-size: 10rem;
+}
+
+.container>div:hover {
+    cursor: pointer;
+}
