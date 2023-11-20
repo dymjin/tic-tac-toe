@@ -39,10 +39,10 @@ const DOMDisplay = (() => {
 
     const clearDisplay = () => {
         board.forEach(arr => {
-            arr.forEach(div => div.addEventListener('click', () => {
+            arr.forEach(div => {
                 div.textContent = "";
-            }))
-        })
+            });
+        });
     }
 
     return { updateDisplay, clearDisplay };
@@ -50,24 +50,15 @@ const DOMDisplay = (() => {
 
 const Game = (() => {
     const board = Gameboard.getBoard();
+    let gameActive = true;
     let currentPlayer;
     let marker2;
     let moves = [];
-
-    const player1 = Player("player one");
-    marker2 = player1.getMarker() === "O" ? "X" : "O";
-    const player2 = Player("player two", marker2);
-    const players =
-        [
-            player1,
-            player2
-        ];
-    if (players[0].getMarker() === "X") {
-        currentPlayer = players[0];
-    }
-    else {
-        currentPlayer = players[1];
-    }
+    let players = [];
+    const startBtn = document.querySelector('button.start');
+    const restartBtn = document.querySelector('button.restart');
+    const input1 = document.querySelector('input[id="player1"]');
+    const input2 = document.querySelector('input[id="player2"]');
 
     const getCurrentPlayer = () => currentPlayer;
 
@@ -102,33 +93,80 @@ const Game = (() => {
         }
         return false;
     }
-
-    const endGame = () => {
-        controller.abort();
-        getCurrentPlayer().updateScore();
-    }
-    
     //https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     //https://stackoverflow.com/questions/3723914/remove-eventlistener-in-javascript-after-event-occurred#:~:text=For%20those%20who%20needs%20to%20remove%20after%20a%20certain%20condition%20(or%20even%20inside%20a%20loop%20too)%2C%20one%20alternative%20is%20using%20AbortController%20and%20AbortSignal%3A
-    const controller = new AbortController();
-    const placeMarker = () => {
+    // const controller = new AbortController();
+    const endGame = () => {
+        // controller.abort();
+        gameActive = false;
+        getCurrentPlayer().updateScore();
+        const winMsg = document.createElement('div');
+        winMsg.textContent = `${currentPlayer.getName()} wins!`;
+        winMsg.classList.add('win');
+        document.querySelector(".container").appendChild(winMsg);
+    }
+
+    const init = () => {
         board.forEach(arr => arr.forEach(div => {
-            checkMoves = (div) => {
-                return { div };
-            }
             div.addEventListener('click', () => {
-                checkMoves.div = div;
-                if (div.textContent !== "") { }
-                else {
-                    DOMDisplay.updateDisplay(div, getCurrentPlayer().getMarker());
-                    moves.push(getCurrentPlayer().getMarker());
-                    if (moves.length >= 5 && checkBoard(board)) {
-                        endGame();
-                    }
-                    switchPlayerTurn();
-                }
-            }, { signal: controller.signal });
+                // startGame();
+                placeMarker(div);
+            });
         }));
     }
-    placeMarker();
+
+    const placeMarker = (div) => {
+        if (gameActive) {
+            if (div.textContent !== "") { }
+            else {
+                DOMDisplay.updateDisplay(div, getCurrentPlayer().getMarker());
+                moves.push(getCurrentPlayer().getMarker());
+                if (moves.length >= 5 && checkBoard(board)) {
+                    endGame();
+                }
+                switchPlayerTurn();
+            }
+        }
+        input1.disabled = true;
+        input2.disabled = true;
+        // board.forEach(arr => arr.forEach(div => {
+        //     div.addEventListener('click', () => {
+
+        // }/*{signal: controller.signal} */);
+        // }));
+    }
+
+    const startGame = () => {
+        const player1 = Player(input1.value);
+        marker2 = player1.getMarker() === "O" ? "X" : "O";
+        const player2 = Player(input2.value, marker2);
+        players.push(player1, player2);
+        if (players[0].getMarker() === "X") {
+            currentPlayer = players[0];
+        }
+        else {
+            currentPlayer = players[1];
+        }
+    }
+
+    startBtn.addEventListener('click', () => {
+        startBtn.disabled = true;
+        input1.disabled = true;
+        input2.disabled = true;
+        init();
+        startGame();
+    }, { once: true });
+
+    restartBtn.addEventListener('click', () => {
+        DOMDisplay.clearDisplay();
+        input1.disabled = false;
+        input2.disabled = false;
+        moves = [];
+        players = [];
+        startGame();
+        gameActive = true;
+        if (document.querySelector(".container").lastChild === document.querySelector(".win")) {
+            document.querySelector('.container').removeChild(document.querySelector(".win"));
+        }
+    });
 })();
