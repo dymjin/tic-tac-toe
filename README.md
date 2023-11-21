@@ -1,1 +1,1 @@
-# tic-tac-toe
+Tic Tac Toe project. Intermediate project testing the use of module patterns + factory functions, using as little global vars/functions as possible. Live preview: https://dymjin.github.io/tic-tac-toe/
