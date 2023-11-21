@@ -1,16 +1,30 @@
+:root {
+    --main-color-theme: rgb(255, 217, 0);
+    --main-color-theme-darker: color-mix(in srgb, var(--main-color-theme) 100%, rgb(58, 0, 0) 40%);
+}
+
 *,
 html,
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--main-color-theme);
 }
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
 
 .page-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3rem;
+    gap: 2.5rem;
     margin-top: 1rem;
 }
 
@@ -26,7 +40,7 @@ body {
 }
 
 .container>div {
-    background-color: white;
+    background-color: var(--main-color-theme);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,9 +57,32 @@ body {
     cursor: pointer;
 }
 
+.container>.win {
+    position: absolute;
+    top: calc(calc(608px - 80px) / 2);
+    background: rgb(0, 0, 0, 0.75);
+    color: var(--main-color-theme);
+    width: 608px;
+    height: 80px;
+    font-size: 4rem;
+    padding: 1rem 0;
+}
+
+.container>.win:hover {
+    cursor: default;
+}
+
 .name-inputs {
     display: flex;
+    align-items: center;
     gap: 2rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.name-inputs>div {
+    display: flex;
+    align-items: center;
 }
 
 .name-inputs>p {
@@ -54,29 +91,103 @@ body {
     gap: 0.5rem;
 }
 
-input[type="text"]:disabled {
-    user-select: none;
+div>label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: fit-content;
 }
 
-input[type="text"]+span {
-    user-select: none;
+div>label:hover::after {
+    font-weight: 900;
+    content: "🖉";
+    top: 4px;
+    right: 10px;
+    color: var(--main-color-theme);
+    position: absolute;
+}
+
+input[type="text"] {
+    appearance: none;
+    border: none;
+    text-align: center;
+    border: 2px solid black;
+    width: fit-content;
+    height: fit-content;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    outline: 1px solid var(--main-color-theme);
 }
 
 input[type="text"]:hover {
-    background: blue;
+    color: var(--main-color-theme);
+    background-color: black;
 }
 
-.container>.win {
-    position: absolute;
-    top: calc(calc(608px - 80px) / 2);
-    background: rgb(0, 0, 0, 0.75);
-    color: white;
-    width: 608px;
-    height: 80px;
-    font-size: 4rem;
-    cursor: wait;
+input[type="text"]:disabled {
+    background: none;
+    color: var(--main-color-theme-darker);
+    border: 2px solid var(--main-color-theme-darker);
 }
 
-.container>.win:hover {
-    cursor: default;
+input[type="text"]:disabled:hover {
+    background: none;
+    color: var(--main-color-theme-darker);
+}
+
+input[type="text"]:disabled:hover::after {
+    content: "";
+}
+
+.game-control-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    user-select: none;
+}
+
+.game-control-btns>button {
+    appearance: none;
+    border: none;
+    border: 2px solid black;
+    border-radius: 0.3rem;
+    background: none;
+    height: fit-content;
+    padding: 0.3rem 0.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+button.restart::after {
+    content: " ↺";
+}
+
+button.restart:hover {
+    color: var(--main-color-theme);
+    background-color: black;
+}
+
+button.start::after {
+    content: " ►";
+}
+
+button.start:disabled:hover {
+    background: none;
+    color: var(--main-color-theme-darker);
+}
+
+button.start:disabled {
+    color: var(--main-color-theme-darker);
+    border: 2px solid var(--main-color-theme-darker);
+}
+
+button.start:hover {
+    color: var(--main-color-theme);
+    background-color: black;
 }

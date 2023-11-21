@@ -26,8 +26,11 @@ function Player(name, marker) {
 
     const getMarker = () => marker;
     const getName = () => name;
+    const setName = (newName) => {
+        name = newName;
+    }
 
-    return { getName, getMarker, updateScore, getScore };
+    return { getName, getMarker, setName, updateScore, getScore };
 }
 
 const DOMDisplay = (() => {
@@ -109,26 +112,36 @@ const Game = (() => {
     const init = () => {
         board.forEach(arr => arr.forEach(div => {
             div.addEventListener('click', () => {
-                // startGame();
                 placeMarker(div);
             });
         }));
+        input1.addEventListener('change', () => {
+            players[0].setName(input1.value);
+        });
+        input2.addEventListener('change', () => {
+            players[1].setName(input2.value);
+        });
     }
 
     const placeMarker = (div) => {
-        if (gameActive) {
-            if (div.textContent !== "") { }
-            else {
-                DOMDisplay.updateDisplay(div, getCurrentPlayer().getMarker());
-                moves.push(getCurrentPlayer().getMarker());
-                if (moves.length >= 5 && checkBoard(board)) {
-                    endGame();
+        if (input1.value === "" || input2.value === "") {
+            input1.value === "" ? input1.focus() : input2.focus();
+        } else {
+            if (gameActive) {
+                if (div.textContent !== "") { }
+                else {
+                    DOMDisplay.updateDisplay(div, getCurrentPlayer().getMarker());
+                    moves.push(getCurrentPlayer().getMarker());
+                    if (moves.length >= 5 && checkBoard(board)) {
+                        endGame();
+                    }
+                    switchPlayerTurn();
                 }
-                switchPlayerTurn();
             }
+            input1.disabled = true;
+            input2.disabled = true;
         }
-        input1.disabled = true;
-        input2.disabled = true;
+
         // board.forEach(arr => arr.forEach(div => {
         //     div.addEventListener('click', () => {
 
@@ -150,17 +163,23 @@ const Game = (() => {
     }
 
     startBtn.addEventListener('click', () => {
-        startBtn.disabled = true;
-        input1.disabled = true;
-        input2.disabled = true;
-        init();
-        startGame();
-    }, { once: true });
+        if (input1.value === "" || input2.value === "") {
+            input1.value === "" ? input1.focus() : input2.focus();
+        } else {
+            startBtn.disabled = true;
+            input1.disabled = true;
+            input2.disabled = true;
+            init();
+            startGame();
+        }
+    });
 
     restartBtn.addEventListener('click', () => {
         DOMDisplay.clearDisplay();
         input1.disabled = false;
         input2.disabled = false;
+        input1.value = "Player one";
+        input2.value = "Player two";
         moves = [];
         players = [];
         startGame();
